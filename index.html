@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ro" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="home.title">Domino — Preia controlul asupra timpului tău</title>
+<meta name="description" content="Domino este aplicația de auto-control pentru Android. Blochează aplicații, creează programe și construiește obiceiuri sănătoase — fără să depinzi de altcineva.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== PRELOADER (punctele domino → telefon) ===== -->
+<div id="preloader"><svg viewBox="0 0 150 150"></svg></div>
+
+<!-- ===== NAVBAR ===== -->
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark"></span> Domino</a>
+    <nav class="nav__links" id="menu">
+      <a href="index.html" class="active" data-i18n="nav.home">Acasă</a>
+      <a href="produs.html" data-i18n="nav.product">Produs</a>
+      <a href="fondator.html" data-i18n="nav.founder">Fondator</a>
+      <a href="preturi.html" data-i18n="nav.pricing">Prețuri</a>
+    </nav>
+    <div class="nav__cta">
+      <button class="lang-switch" data-lang="ro" aria-label="Limbă / Language">
+        <span class="lang-switch__thumb"></span>
+        <span class="lang-switch__opt" data-set="ro">RO</span>
+        <span class="lang-switch__opt" data-set="en">EN</span>
+      </button>
+      <a href="preturi.html" class="btn btn--primary" data-i18n="nav.cta">Descarcă gratuit</a>
+      <button class="nav__toggle" id="toggle" aria-label="Meniu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="page-fade">
+
+<!-- ===== HERO (clip pe tot ecranul) ===== -->
+<section class="hero">
+  <video class="hero-video" autoplay muted loop playsinline poster="bg-poster.jpg">
+    <source src="bg.mp4" type="video/mp4">
+  </video>
+  <div class="hero-scrim"></div>
+  <div class="wrap hero__grid">
+    <div class="reveal">
+      <h1 data-i18n="hero.h1">Rupe lanțul și <span class="accent">preia controlul</span> asupra timpului tău.</h1>
+    </div>
+  </div>
+  <div class="hero__scroll" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- ===== CINEMA — secvență cu scroll (efectul domino) ===== -->
+<section class="cinema" id="cinema">
+  <div class="cinema__stage">
+
+    <!-- Ilustrația cu dominouri (zoom/pan controlat de scroll) -->
+    <div class="cinema__world" id="cineWorld">
+      <svg viewBox="0 0 2400 1500" preserveAspectRatio="xMidYMid slice" id="cineSvg">
+        <defs>
+          <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7B5CFF"/>
+            <stop offset="1" stop-color="#C64AD6"/>
+          </linearGradient>
+          <radialGradient id="moonG" cx="50%" cy="45%" r="60%">
+            <stop offset="0" stop-color="#fff"/>
+            <stop offset=".55" stop-color="#efe6ff"/>
+            <stop offset="1" stop-color="#b79cff"/>
+          </radialGradient>
+          <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="rgba(198,74,214,.55)"/>
+            <stop offset="1" stop-color="rgba(198,74,214,0)"/>
+          </radialGradient>
+          <radialGradient id="floorG" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="rgba(123,92,255,.28)"/>
+            <stop offset="1" stop-color="rgba(123,92,255,0)"/>
+          </radialGradient>
+        </defs>
+
+        <!-- stele -->
+        <g fill="#fff" opacity=".7">
+          <circle cx="180" cy="180" r="3"/><circle cx="520" cy="90" r="2"/>
+          <circle cx="820" cy="240" r="2.5"/><circle cx="1180" cy="120" r="2"/>
+          <circle cx="1500" cy="70" r="3"/><circle cx="2180" cy="180" r="2.5"/>
+          <circle cx="2320" cy="520" r="2"/><circle cx="1350" cy="330" r="2"/>
+          <circle cx="90" cy="470" r="2"/><circle cx="2250" cy="820" r="2.5"/>
+        </g>
+
+        <!-- luna -->
+        <circle cx="1980" cy="300" r="330" fill="url(#moonHalo)"/>
+        <circle cx="1980" cy="300" r="150" fill="url(#moonG)"/>
+        <circle cx="1930" cy="255" r="26" fill="rgba(150,120,210,.25)"/>
+        <circle cx="2035" cy="335" r="18" fill="rgba(150,120,210,.22)"/>
+        <circle cx="1955" cy="360" r="12" fill="rgba(150,120,210,.2)"/>
+
+        <!-- podea -->
+        <ellipse cx="1000" cy="1330" rx="1300" ry="90" fill="url(#floorG)"/>
+        <rect x="0" y="1330" width="2400" height="3" fill="rgba(255,255,255,.10)"/>
+
+        <!-- dominouri (mic → mare, ultimul ajunge la lună) -->
+        <g class="dom" stroke="rgba(255,255,255,.14)" stroke-width="2">
+          <g>
+            <rect x="234.5" y="1260" width="31" height="70" rx="5.6" fill="url(#dg)"/>
+            <line x1="238.2" y1="1295" x2="261.8" y2="1295" stroke="rgba(255,255,255,.5)"/>
+            <circle cx="250" cy="1278.9" r="4" fill="#fff"/><circle cx="250" cy="1311.1" r="4" fill="#fff"/>
+          </g>
+          <g>
+            <rect x="313" y="1210" width="54" height="120" rx="9.7" fill="url(#dg)"/>
+            <line x1="319.5" y1="1270" x2="360.5" y2="1270" stroke="rgba(255,255,255,.5)"/>
+            <circle cx="340" cy="1242.4" r="7" fill="#fff"/><circle cx="340" cy="1297.6" r="7" fill="#fff"/>
+          </g>
+          <g>
+            <rect x="424" y="1125" width="92" height="205" rx="16.6" fill="url(#dg)"/>
+            <line x1="435" y1="1227.5" x2="505" y2="1227.5" stroke="rgba(255,255,255,.5)"/>
+            <circle cx="470" cy="1180.4" r="12" fill="#fff"/><circle cx="470" cy="1274.6" r="12" fill="#fff"/>
+          </g>
+          <g>
+            <rect x="601" y="980" width="158" height="350" rx="28.4" fill="url(#dg)"/>
+            <line x1="620" y1="1155" x2="740" y2="1155" stroke="rgba(255,255,255,.5)"/>
+            <circle cx="680" cy="1074.5" r="20.5" fill="#fff"/><circle cx="680" cy="1235.5" r="20.5" fill="#fff"/>
+          </g>
+          <g>
+            <rect x="865" y="730" width="270" height="600" rx="48.6" fill="url(#dg)"/>
+            <line x1="897" y1="1030" x2="1103" y2="1030" stroke="rgba(255,255,255,.5)"/>
+            <circle cx="1000" cy="892" r="35" fill="#fff"/><circle cx="1000" cy="1168" r="35" fill="#fff"/>
+          </g>
+          <g>
+            <rect x="1325" y="330" width="450" height="1000" rx="81" fill="url(#dg)"/>
+            <line x1="1379" y1="830" x2="1721" y2="830" stroke="rgba(255,255,255,.5)"/>
+            <circle cx="1550" cy="600" r="58" fill="#fff"/><circle cx="1550" cy="1060" r="58" fill="#fff"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Replicile care apar pe rând, „în față" -->
+    <div class="cine-layer" id="cineText">
+      <p class="cine-line" data-scene="q" data-i18n="cine.q">Ai auzit de <span class="accent">efectul domino</span>?</p>
+      <p class="cine-line cine-line--caption" data-scene="s1" data-i18n="cine.s1">Pui un domino mic lângă unul puțin mai mare — <span class="accent">cel mic îl împinge pe cel mare.</span></p>
+      <p class="cine-line cine-line--caption" data-scene="s2" data-i18n="cine.s2">Și dacă <span class="accent">continui tot așa…</span></p>
+      <p class="cine-line cine-line--caption" data-scene="s3" data-i18n="cine.s3">Peste un timp…</p>
+      <p class="cine-line" data-scene="s4" data-i18n="cine.s4">O să ajungi la <span class="accent">Lună</span>.</p>
+      <p class="cine-line" data-scene="s5" data-i18n="cine.s5">Fiecare lucru mic e un pas spre <span class="accent">visul tău.</span></p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== CTA FINAL (finală cinematică, totul cu popup) ===== -->
+<section class="cta finale" id="finale">
+  <div class="finale__glow" aria-hidden="true"></div>
+  <div class="finale__moon" aria-hidden="true"></div>
+  <div class="wrap finale__inner">
+    <span class="eyebrow pop" style="--i:0;justify-content:center" data-i18n="finale.eyebrow">Începe azi</span>
+    <h2 class="pop" style="--i:1" data-i18n="finale.h2">Prima piesă<br>o pui <span class="accent">tu.</span></h2>
+    <p class="lead pop" style="--i:2" data-i18n="finale.lead">Restul cad la locul lor. Descarcă Domino gratuit și pune prima piesă din lanțul obiceiurilor tale bune.</p>
+    <a href="preturi.html" class="btn btn--primary btn--xl pop" style="--i:3">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5V3.5c0-.6.3-1 .8-1.3L14 12 3.8 21.8c-.5-.3-.8-.7-.8-1.3z"/></svg>
+      <span data-i18n="finale.btn">Descarcă pe Android</span>
+    </a>
+    <span class="finale__note pop" style="--i:4" data-i18n="finale.note">Android 8+ · 0 lei · fără cont</span>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <a class="brand" href="index.html" style="margin-bottom:14px"><span class="brand__mark"></span> Domino</a>
+        <p style="font-size:14px;max-width:260px" data-i18n="foot.tagline">Aplicația de auto-control pentru Android. Preia controlul asupra timpului tău, o piesă pe rând.</p>
+      </div>
+      <div><h4 data-i18n="foot.h.product">Produs</h4><a href="produs.html" data-i18n="nav.product">Produs</a><a href="fondator.html" data-i18n="nav.founder">Fondator</a><a href="preturi.html" data-i18n="nav.pricing">Prețuri</a></div>
+      <div><h4 data-i18n="foot.h.company">Companie</h4><a href="fondator.html" data-i18n="foot.about">Despre</a><a href="#" data-i18n="foot.blog">Blog</a><a href="#" data-i18n="foot.contact">Contact</a></div>
+      <div><h4 data-i18n="foot.h.legal">Legal</h4><a href="#" data-i18n="foot.terms">Termeni</a><a href="#" data-i18n="foot.privacy">Confidențialitate</a></div>
+    </div>
+    <div class="foot__bottom">
+      <span data-i18n="foot.rights">© 2026 Domino. Toate drepturile rezervate.</span>
+      <span data-i18n="foot.madeby">Realizat de <b style="color:var(--text)">KOREH.</b></span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
