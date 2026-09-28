@@ -1,0 +1,213 @@
+/* Domino
+   Paleta vine dintr-un domino adevărat: piesa de os (bone), punctele negre, punctul roșu
+   de la unele seturi. Roșul apare doar unde trebuie apăsat sau unde cade ceva. */
+:root{
+  --ink:#0c0b0a; --ink-2:#141210; --ink-3:#1d1a17; --line:#2b2723; --line-2:#3a352f;
+  --bone:#efe8da; --bone-2:#cbc2b2; --ash:#8c8477; --red:#ff4524; --red-2:#ff6a4d;
+  --f:'Bricolage Grotesque', ui-sans-serif, sans-serif;
+  --m:'JetBrains Mono', ui-monospace, monospace;
+  --pad:clamp(20px, 5vw, 72px);
+  --ease:cubic-bezier(.2,.9,.25,1);
+  --fall:cubic-bezier(.55,0,.75,1.25);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--ink);color:var(--bone);font:400 17px/1.55 var(--f);font-variation-settings:'opsz' 16;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{margin:0;font-weight:700;font-variation-settings:'opsz' 96;letter-spacing:-.035em;text-wrap:balance}
+p{margin:0}
+.mono{font-family:var(--m);font-size:13px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.dim{color:var(--ash)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
+
+/* ——— butoane ——— */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;
+  font:600 16px/1 var(--f);padding:17px 24px;border-radius:12px;border:0;cursor:pointer;
+  transition:transform .25s var(--ease), background-color .2s, box-shadow .25s var(--ease)}
+.btn--red{background:var(--red);color:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.25) inset, 0 10px 30px -12px rgba(255,69,36,.7)}
+.btn--red:hover{background:var(--red-2);transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.25) inset, 0 16px 34px -12px rgba(255,69,36,.8)}
+.btn--red:active{transform:translateY(1px) scale(.98)}
+.btn--bone{background:var(--bone);color:var(--ink)}
+.btn--bone:hover{background:#fff}
+.btn--sm{padding:11px 16px;font-size:14px;border-radius:10px}
+.btn--xl{padding:22px 32px;font-size:19px;border-radius:14px}
+.link{font-weight:600;text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:6px;text-decoration-thickness:2px;transition:text-decoration-color .2s}
+.link:hover{text-decoration-color:var(--bone)}
+
+/* ——— bara de sus ——— */
+.nav{position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;gap:32px;
+  padding:16px var(--pad);transition:background-color .3s, border-color .3s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(12,11,10,.94);border-bottom-color:var(--line)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 22px/1 var(--f);letter-spacing:-.04em;font-variation-settings:'opsz' 48}
+.nav__links{display:flex;gap:28px;margin-left:auto}
+.nav__links a{text-decoration:none;font-size:15px;color:var(--bone-2);transition:color .2s}
+.nav__links a:hover{color:var(--bone)}
+.nav__end{display:flex;align-items:center;gap:16px}
+.lang{display:flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden}
+.lang button{all:unset;cursor:pointer;font:600 12px/1 var(--m);padding:9px 10px;color:var(--ash);transition:color .2s, background-color .2s}
+.lang button[aria-pressed="true"]{background:var(--bone);color:var(--ink)}
+.lang button:focus-visible{outline:2px solid var(--red);outline-offset:-2px}
+
+/* ——— hero ——— */
+.hero{position:relative;min-height:100svh;display:grid;grid-template-rows:1fr auto;overflow:hidden;
+  padding:clamp(96px,12vh,120px) var(--pad) 24px}
+.hero__video{position:absolute;inset:0 0 0 auto;width:78%;height:100%;object-fit:cover;opacity:.62;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%);mask-image:linear-gradient(90deg,transparent 0,#000 38%)}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:38%;background:linear-gradient(0deg,var(--ink) 20%,transparent);pointer-events:none}
+.hero__body{position:relative;z-index:2;align-self:center;max-width:980px}
+.kicker{color:var(--bone-2);margin-bottom:clamp(14px,2.4vh,26px)}
+.hero h1{font-size:clamp(50px, min(7.4vw, 12.5vh), 128px);line-height:.9;letter-spacing:-.045em;max-width:11ch}
+.hero h1 em{font-style:normal;color:var(--bone-2);font-weight:300}
+.hero__lead{margin-top:clamp(18px,3vh,30px);max-width:40ch;font-size:clamp(18px,1.6vw,21px);color:var(--bone-2);line-height:1.5}
+.hero__cta{display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:clamp(22px,3.6vh,38px)}
+.meta{margin-top:16px;color:var(--ash)}
+
+/* Lanțul: 30 de piese, fiecare cade peste următoarea. */
+.chain{position:relative;z-index:2;margin-top:clamp(24px,4vh,40px)}
+.chain__head{display:flex;justify-content:space-between;color:var(--ash);margin-top:12px}
+.chain__head b{color:var(--bone);font-weight:600}
+.chain__row{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:repeat(30,1fr);align-items:end;gap:0;width:100%;height:clamp(52px,min(6vw,9vh),88px);
+  border-bottom:2px solid var(--line-2);padding-right:calc(100% / 30 * .6)}
+.chain__row:focus-visible{outline:2px solid var(--red);outline-offset:8px}
+.tile{justify-self:center;width:clamp(12px,1.25vw,20px);height:100%;border-radius:4px;background:var(--bone);position:relative;
+  transform-origin:100% 100%;transition:transform .42s var(--fall), background-color .3s;
+  box-shadow:inset -3px 0 0 rgba(0,0,0,.14)}
+.tile::before{content:"";position:absolute;left:3px;right:3px;top:50%;height:1px;background:rgba(12,11,10,.22)}
+.tile::after{content:"";position:absolute;left:50%;top:22%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--ink);box-shadow:0 calc(clamp(52px,min(6vw,9vh),88px) * .5) 0 var(--ink)}
+.tile:nth-child(7n+3)::after{box-shadow:0 calc(clamp(52px,min(6vw,9vh),88px) * .5) 0 var(--red)}
+.tile.down{transform:rotate(72deg)}
+.tile.first{animation:wobble 2.6s var(--ease) infinite}
+.chain.go .tile.first{animation:none}
+@keyframes wobble{0%,62%,100%{transform:rotate(0)}70%{transform:rotate(12deg)}78%{transform:rotate(-3deg)}86%{transform:rotate(5deg)}93%{transform:rotate(0)}}
+.chain__hint{color:var(--red);margin-bottom:10px;padding-left:18px;position:relative;transition:opacity .3s}
+.chain__hint::before{content:"";position:absolute;left:5px;top:3px;bottom:-12px;width:1.5px;background:var(--red)}
+.chain.go .chain__hint{opacity:0}
+
+/* ——— antet de secțiune: număr de catalog + titlu ——— */
+.sec-head{display:grid;grid-template-columns:minmax(80px,1fr) 5fr;gap:24px;align-items:baseline;margin-bottom:clamp(40px,6vw,80px)}
+.idx{color:var(--ash)}
+.sec-head h2{font-size:clamp(34px,4.8vw,72px);line-height:.98;max-width:16ch}
+section{position:relative}
+
+/* ——— cum merge: lista curge, telefonul stă fix ——— */
+.how{padding:clamp(90px,12vw,170px) var(--pad) 40px}
+.how__grid{display:grid;grid-template-columns:minmax(80px,1fr) 3fr 2fr;gap:24px}
+.how__list{grid-column:2;list-style:none;margin:0;padding:0}
+.step{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:40px 0;border-top:1px solid var(--line);
+  opacity:.28;transition:opacity .5s var(--ease)}
+.step.on{opacity:1}
+.step__n{color:var(--red);margin-bottom:18px}
+.step h3{font-size:clamp(30px,3.4vw,52px);line-height:1;max-width:14ch}
+.step p{margin-top:20px;max-width:38ch;color:var(--bone-2);font-size:19px}
+.step__video{display:none}
+.phone{grid-column:3;position:sticky;top:calc(50vh - min(34vh, 330px));height:min(68vh,660px);align-self:start;justify-self:center;aspect-ratio:390/844;
+  border-radius:44px;padding:11px;background:linear-gradient(160deg,#2a2622,#0f0e0c 55%,#23201c);
+  box-shadow:0 0 0 1px #3d3832, 0 40px 80px -30px rgba(0,0,0,.9), 0 0 120px -40px rgba(239,232,218,.12)}
+.phone__screen{position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:var(--ink)}
+.phone__screen video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02);transition:opacity .45s, transform .6s var(--ease)}
+.phone__screen video.on{opacity:1;transform:none}
+.phone__dots{position:absolute;left:0;right:0;bottom:-30px;display:flex;justify-content:center;gap:8px}
+.phone__dots i{width:18px;height:4px;border-radius:2px;background:var(--line-2);transition:background-color .3s, width .3s var(--ease)}
+.phone__dots i.on{background:var(--bone);width:30px}
+
+/* ——— fișa tehnică ——— */
+.spec{padding:clamp(90px,12vw,160px) var(--pad)}
+.spec__table{margin:0;display:grid;grid-template-columns:minmax(80px,1fr) 5fr;gap:0 24px}
+.spec__table div{grid-column:2;display:grid;grid-template-columns:minmax(150px,1fr) 3fr;gap:24px;padding:26px 0;border-top:1px solid var(--line)}
+.spec__table div:last-child{border-bottom:1px solid var(--line)}
+.spec__table dt{font:600 13px/1.6 var(--m);color:var(--ash);text-transform:uppercase;letter-spacing:.06em}
+.spec__table dd{margin:0;font-size:clamp(19px,1.8vw,24px);line-height:1.35;max-width:36ch;letter-spacing:-.01em}
+.spec__table dd .mono{display:block;margin-top:6px}
+
+/* ——— fondator ——— */
+.founder{display:grid;grid-template-columns:minmax(80px,1fr) 2fr 3fr;gap:24px;padding:clamp(60px,8vw,120px) var(--pad);align-items:center}
+.founder__photo{grid-column:1 / 3;margin:0;position:relative}
+.founder__photo img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 30%;border-radius:4px;filter:grayscale(.15) contrast(1.05)}
+.founder__photo figcaption{margin-top:12px;color:var(--ash)}
+.founder__text{padding-left:clamp(0px,4vw,60px)}
+.founder__text .idx{display:block;margin-bottom:22px}
+.founder h2{font-size:clamp(34px,4.4vw,64px);line-height:.98;max-width:13ch}
+.founder blockquote{margin:30px 0;font:300 clamp(24px,2.6vw,36px)/1.2 var(--f);letter-spacing:-.02em;color:var(--bone-2);
+  padding-left:22px;border-left:3px solid var(--red)}
+.founder p{max-width:44ch;color:var(--bone-2);margin-top:16px;font-size:18px}
+
+/* ——— prețuri ——— */
+.pricing{padding:clamp(90px,12vw,160px) var(--pad) 40px}
+.plans{width:100%;border-collapse:collapse;margin-left:auto;max-width:calc(100% * 5 / 6 - 4px);font-size:18px}
+.plans th,.plans td{text-align:left;padding:20px 16px 20px 0;border-top:1px solid var(--line);vertical-align:baseline}
+.plans thead th{font:700 clamp(22px,2.2vw,30px)/1 var(--f);letter-spacing:-.03em;border-top:0;padding-bottom:24px}
+.plans tbody th{font-weight:500;color:var(--bone)}
+.plans td{color:var(--bone-2);width:26%}
+.plans td:last-child{color:var(--bone)}
+.soon{display:inline-block;vertical-align:middle;margin-left:8px;color:var(--red);font-weight:600}
+.plans__price th,.plans__price td{border-bottom:1px solid var(--line);font-size:20px;color:var(--bone)}
+
+/* ——— întrebări ——— */
+.faq{padding:clamp(90px,12vw,160px) var(--pad)}
+.faq__list{margin-left:auto;max-width:calc(100% * 5 / 6 - 4px)}
+.faq details{border-top:1px solid var(--line)}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;padding:24px 0;
+  font:600 clamp(19px,1.7vw,23px)/1.3 var(--f);letter-spacing:-.015em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:400 26px/1 var(--m);color:var(--ash);transition:transform .3s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg);color:var(--red)}
+.faq details p{padding:0 0 26px;max-width:56ch;color:var(--bone-2)}
+
+/* ——— final ——— */
+.final{padding:clamp(110px,14vw,200px) var(--pad) clamp(90px,10vw,140px);text-align:center;display:flex;flex-direction:column;align-items:center;
+  border-top:1px solid var(--line);overflow:hidden}
+.final__tile{width:74px;height:142px;border-radius:12px;background:var(--bone);position:relative;margin-bottom:46px;transform-origin:100% 100%;
+  transition:transform .6s var(--fall);box-shadow:inset -6px 0 0 rgba(0,0,0,.12)}
+.final__tile::before{content:"";position:absolute;left:10px;right:10px;top:50%;height:2px;background:rgba(12,11,10,.2)}
+.final__tile i{position:absolute;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ink);top:26px}
+.final__tile i + i{top:auto;bottom:26px;background:var(--red)}
+.final.lean .final__tile{transform:rotate(16deg)}
+.final.fell .final__tile{transform:rotate(90deg) translateY(10px)}
+.final h2{font-size:clamp(46px,7vw,112px);line-height:.92;letter-spacing:-.045em}
+.final h2 em{font-style:normal;color:var(--red)}
+.final > p:not(.meta){margin:22px 0 38px;color:var(--bone-2);font-size:19px;max-width:40ch}
+
+.foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:30px var(--pad) 40px;border-top:1px solid var(--line);color:var(--ash)}
+.foot .brand{font-size:18px;color:var(--bone)}
+
+/* ——— intrări la scroll, doar pe titluri; restul stă pe loc ——— */
+.js .sec-head h2, .js .founder h2, .js .final h2{clip-path:inset(0 0 100% 0);transform:translateY(24px);transition:clip-path .9s var(--ease), transform .9s var(--ease)}
+.js .in h2, .js h2.in{clip-path:inset(0 0 -10% 0);transform:none}
+
+/* ——— ecrane mici ——— */
+@media (max-width: 960px){
+  .nav__links{display:none}
+  .hero__video{width:100%;opacity:.4}
+  .sec-head,.spec__table{grid-template-columns:1fr}
+  .spec__table div{grid-column:1;grid-template-columns:1fr;gap:6px}
+  .how__grid{grid-template-columns:1fr}
+  .how__list{grid-column:1}
+  .phone{display:none}
+  .step{min-height:auto;opacity:1;padding:48px 0}
+  .step__video{display:block;margin-top:30px;width:min(300px,78vw);aspect-ratio:390/844;height:auto;object-fit:cover;border-radius:28px;
+    border:9px solid #1d1a17;box-shadow:0 0 0 1px #3d3832, 0 30px 60px -30px #000}
+  .founder{grid-template-columns:1fr}
+  .founder__photo{grid-column:1}
+  .founder__text{padding-left:0}
+  .plans,.faq__list{max-width:none}
+  .plans td{width:30%}
+}
+@media (max-width: 560px){
+  .nav{gap:12px}
+  .nav .btn--sm{display:none}
+  .hero{padding-top:104px}
+  .hero__cta{gap:20px}
+  .chain__row{grid-template-columns:repeat(15,1fr)}
+  .tile:nth-child(n+16){display:none}
+  .plans{font-size:15px}
+  .plans th,.plans td{padding-right:8px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition-duration:.01s !important}
+  .js .sec-head h2,.js .founder h2,.js .final h2{clip-path:none;transform:none}
+}

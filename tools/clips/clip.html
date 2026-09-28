@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Clip Domino</title>
+<!-- Ecranele aplicației, animate, pentru clipurile din telefonul de pe site.
+     Sunt mockup-uri, nu capturi: se înregistrează cu tools/clips/record.js.
+     Înlocuiește-le cu înregistrări reale de ecran când le ai. -->
+<link rel="stylesheet" href="../../assets/fonts.css">
+<style>
+:root{
+  --ink:#0c0b0a; --ink2:#161412; --ink3:#211e1a; --line:#2e2a25;
+  --bone:#efe8da; --bone2:#bdb4a4; --ash:#857d70; --red:#ff4524;
+  --f:'Bricolage Grotesque',sans-serif; --m:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0}
+html,body{width:390px;height:844px;overflow:hidden;background:var(--ink);color:var(--bone);font:15px/1.35 var(--f);-webkit-font-smoothing:antialiased}
+.sb{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font:600 14px var(--m);color:var(--bone2)}
+.sb i{display:inline-block;width:22px;height:11px;border:1.5px solid var(--bone2);border-radius:3px;position:relative}
+.sb i::after{content:"";position:absolute;inset:1.5px 5px 1.5px 1.5px;background:var(--bone2);border-radius:1px}
+.app{position:absolute;inset:44px 0 0;padding:14px 20px}
+.top{display:flex;align-items:center;justify-content:space-between;margin:6px 0 18px}
+.top h1{font:700 30px/1 var(--f);letter-spacing:-.02em}
+.mark{width:30px;height:30px}
+.sub{color:var(--ash);font:500 12px var(--m);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:14px;padding:13px 14px;background:var(--ink2);border:1px solid var(--line);border-radius:14px;margin-bottom:8px}
+.ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font:700 17px var(--f);color:var(--ink);background:var(--bone2)}
+.row b{font-weight:600;font-size:16px;display:block}
+.row small{color:var(--ash);font:12px var(--m)}
+.row .grow{flex:1}
+.tg{width:46px;height:28px;border-radius:14px;background:var(--ink3);border:1.5px solid var(--line);position:relative;transition:background .25s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:var(--ash);transition:transform .3s cubic-bezier(.3,1.4,.5,1),background .25s}
+.tg.on{background:var(--red);border-color:var(--red)}
+.tg.on::after{transform:translateX(18px);background:var(--bone)}
+.sheet{position:absolute;left:12px;right:12px;bottom:18px;background:var(--bone);color:var(--ink);border-radius:20px;padding:18px 18px 16px;transform:translateY(130%);transition:transform .55s cubic-bezier(.2,1,.3,1)}
+.sheet.in{transform:none}
+.sheet b{font:700 20px/1.1 var(--f);display:block;margin-bottom:6px}
+.sheet p{font:13px var(--m);color:#5a5348}
+.btn{display:block;text-align:center;margin-top:14px;padding:13px;border-radius:12px;background:var(--ink);color:var(--bone);font-weight:600}
+.tap{position:absolute;width:46px;height:46px;border-radius:50%;background:rgba(239,232,218,.35);border:2px solid rgba(239,232,218,.8);transform:translate(-50%,-50%) scale(.2);opacity:0;pointer-events:none;z-index:50}
+.tap.go{animation:tap .55s ease-out}
+@keyframes tap{0%{opacity:1;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
+.screen{position:absolute;inset:0;transition:opacity .45s, transform .45s}
+.hide{opacity:0;transform:scale(.97);pointer-events:none}
+
+/* ecranul de blocare */
+.block{position:absolute;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
+.bigtile{width:92px;height:176px;border-radius:14px;background:var(--bone);position:relative;margin-bottom:34px;transform-origin:50% 100%}
+.bigtile::before{content:"";position:absolute;left:12px;right:12px;top:50%;height:2px;background:#bfb6a5}
+.pip{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--ink)}
+.block h2{font:700 34px/1.02 var(--f);letter-spacing:-.02em;margin-bottom:12px}
+.block p{color:var(--bone2);font:14px/1.5 var(--m)}
+.block .left{margin-top:26px;font:600 44px var(--m);color:var(--red)}
+
+/* programe */
+.rule{padding:16px;background:var(--ink2);border:1px solid var(--line);border-radius:16px;margin-bottom:10px}
+.rule .h{display:flex;justify-content:space-between;align-items:baseline}
+.rule b{font:650 18px var(--f)}
+.rule .t{font:600 15px var(--m);color:var(--bone)}
+.days{display:flex;gap:6px;margin-top:12px}
+.days span{width:34px;height:30px;border-radius:8px;display:grid;place-items:center;font:600 12px var(--m);color:var(--ash);border:1px solid var(--line);transition:.25s}
+.days span.on{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.bar24{height:26px;border-radius:7px;background:var(--ink3);position:relative;margin-top:14px;overflow:hidden}
+.bar24 i{position:absolute;top:0;bottom:0;background:var(--red);opacity:.9}
+.bar24 em{position:absolute;top:0;bottom:0;background:var(--bone2);opacity:.55}
+.ticks{display:flex;justify-content:space-between;font:11px var(--m);color:var(--ash);margin-top:6px}
+.new{border-style:dashed;border-color:var(--ash);background:transparent}
+.typed{font:650 18px var(--f);min-height:24px}
+.caret{display:inline-block;width:2px;height:20px;background:var(--red);vertical-align:-3px;margin-left:2px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.fab{position:absolute;right:22px;bottom:26px;height:56px;padding:0 22px;border-radius:18px;background:var(--red);color:var(--ink);font:700 16px var(--f);display:flex;align-items:center;gap:10px}
+
+/* focus */
+.ring{width:290px;height:290px;margin:34px auto 26px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .n b{font:600 62px var(--m);letter-spacing:-.04em}
+.ring .n small{font:12px var(--m);color:var(--ash);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+.chips{display:flex;gap:8px;justify-content:center;margin-bottom:22px}
+.chips span{padding:9px 14px;border-radius:10px;border:1px solid var(--line);font:600 13px var(--m);color:var(--bone2)}
+.chips span.on{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.mini{display:flex;gap:6px;justify-content:center;align-items:flex-end;height:44px}
+.mini i{width:14px;height:28px;border-radius:3px;background:var(--ink3);border:1px solid var(--line);transform-origin:100% 100%;transition:transform .45s cubic-bezier(.5,0,.6,1.4),background .3s}
+.mini i.f{background:var(--bone);transform:rotate(62deg)}
+.status{margin-top:22px;text-align:center;font:13px var(--m);color:var(--ash)}
+.status b{color:var(--red);font-weight:600}
+
+/* streak */
+.big{display:flex;align-items:baseline;gap:10px;margin:4px 0 4px}
+.big b{font:700 88px/1 var(--f);letter-spacing:-.05em}
+.big span{font:600 18px var(--f);color:var(--bone2)}
+.rec{font:13px var(--m);color:var(--ash);margin-bottom:22px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px 10px;padding-right:30px}
+.d{height:66px;position:relative}
+.d i{position:absolute;left:50%;bottom:0;width:26px;height:56px;margin-left:-13px;border-radius:5px;background:var(--ink3);border:1px solid var(--line);transform-origin:100% 100%;transition:transform .5s cubic-bezier(.55,0,.7,1.3),background .3s,border-color .3s}
+.d i::before{content:"";position:absolute;left:4px;right:4px;top:50%;height:1px;background:var(--line)}
+.d.done i{background:var(--bone);border-color:var(--bone);transform:rotate(64deg)}
+.d.today i{border-color:var(--red);box-shadow:0 0 0 2px rgba(255,69,36,.35)}
+.d small{position:absolute;left:0;right:0;bottom:-16px;text-align:center;font:10px var(--m);color:var(--ash)}
+</style>
+</head>
+<body>
+<div class="sb"><span>21:47</span><span><i></i></span></div>
+<div id="root"></div>
+<div class="tap" id="tap"></div>
+<script>
+const logo = '<svg class="mark" viewBox="0 0 32 32"><rect x="9" y="3" width="14" height="26" rx="3.2" fill="#efe8da" transform="rotate(14 16 29)"/><circle cx="17.3" cy="10.2" r="2.3" fill="#0c0b0a" transform="rotate(14 16 29)"/><circle cx="17.3" cy="22" r="2.3" fill="#ff4524" transform="rotate(14 16 29)"/></svg>';
+const Z = +(new URLSearchParams(location.search).get('z') || 1);
+if (Z !== 1) document.documentElement.style.zoom = Z;
+const $ = (s) => document.querySelector(s);
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+function tap(el){
+  const r = (typeof el === 'string' ? $(el) : el).getBoundingClientRect();
+  // cu zoom, Chrome dă coordonatele deja înmulțite; tap-ul stă în pagina ne-zoom-uită
+  const t = $('#tap');
+  t.style.left = ((r.left + r.width / 2) / Z) + 'px'; t.style.top = ((r.top + r.height / 2) / Z) + 'px';
+  t.classList.remove('go'); void t.offsetWidth; t.classList.add('go');
+}
+const clip = new URLSearchParams(location.search).get('c') || 'blocare';
+
+const scenes = {
+  async blocare(){
+    const apps = [['T','TikTok','3 h 12 min azi'],['I','Instagram','1 h 48 min azi'],['Y','YouTube','52 min azi'],['S','Snapchat','31 min azi'],['C','Chrome','24 min azi']];
+    $('#root').innerHTML = `<div class="screen" id="list"><div class="app">
+      <div class="top"><h1>Blochează</h1>${logo}</div>
+      <div class="sub">Aplicațiile tale · azi</div>
+      ${apps.map(([l,n,t],i)=>`<div class="row"><div class="ic">${l}</div><div class="grow"><b>${n}</b><small>${t}</small></div><div class="tg" id="t${i}"></div></div>`).join('')}
+      </div>
+      <div class="sheet" id="sheet"><b>2 aplicații în pauză</b><p>până la 17:00 · deblocarea cere o pauză de gândire</p><div class="btn">Pornește</div></div></div>
+      <div class="screen hide" id="blk"><div class="block">
+        <div class="bigtile" id="bt"><span class="pip" style="left:38px;top:30px"></span><span class="pip" style="left:38px;top:130px;background:var(--red)"></span></div>
+        <h2>TikTok e în pauză.</h2><p>Ai ales asta la 14:02.<br>Lanțul tău: 12 zile.</p><div class="left" id="left">2:14:08</div>
+      </div></div>`;
+    await wait(700); tap('#t0'); await wait(150); $('#t0').classList.add('on');
+    await wait(700); tap('#t1'); await wait(150); $('#t1').classList.add('on');
+    await wait(500); $('#sheet').classList.add('in');
+    await wait(1100); tap('#sheet .btn');
+    await wait(500); $('#list').classList.add('hide'); $('#blk').classList.remove('hide');
+    let s = 2*3600+14*60+8; const el = $('#left');
+    for (let k = 0; k < 16; k++){ await wait(160); s--; el.textContent = `${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+  },
+
+  async program(){
+    $('#root').innerHTML = `<div class="app">
+      <div class="top"><h1>Programe</h1>${logo}</div>
+      <div class="rule"><div class="h"><b>Somn</b><span class="t">22:30 – 07:00</span></div>
+        <div class="bar24"><em style="left:0;width:29%"></em><em style="left:93.7%;width:6.3%"></em></div>
+        <div class="ticks"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div></div>
+      <div class="rule new" id="nr"><div class="h"><span class="typed" id="ty"></span><span class="t" id="tt">—</span></div>
+        <div class="bar24"><i id="seg" style="left:33.3%;width:0"></i></div>
+        <div class="days" id="days">${['L','Ma','Mi','J','V','S','D'].map((d)=>`<span>${d}</span>`).join('')}</div></div>
+      <div class="fab" id="fab">Salvează</div></div>`;
+    const txt = 'Școală, fără social media'; const ty = $('#ty');
+    await wait(400);
+    for (let i = 0; i <= txt.length; i++){ ty.innerHTML = txt.slice(0, i) + '<span class="caret"></span>'; await wait(48); }
+    await wait(250);
+    const seg = $('#seg'); seg.style.transition = 'width 1s cubic-bezier(.3,1,.4,1)'; seg.style.width = '25%';
+    const tt = $('#tt');
+    for (let h = 8; h <= 14; h++){ tt.textContent = `08:00 – ${String(h).padStart(2,'0')}:00`; await wait(120); }
+    const days = [...document.querySelectorAll('#days span')];
+    for (let i = 0; i < 5; i++){ tap(days[i]); days[i].classList.add('on'); await wait(230); }
+    await wait(300); tap('#fab'); ty.innerHTML = txt;
+    const nr = $('#nr'); nr.classList.remove('new'); nr.style.transition = 'border-color .4s'; nr.style.borderColor = '#ff4524';
+    await wait(2200);
+  },
+
+  async focus(){
+    const C = 2 * Math.PI * 130;
+    $('#root').innerHTML = `<div class="app">
+      <div class="top"><h1>Focus</h1>${logo}</div>
+      <div class="chips"><span>25 min</span><span class="on" id="c90">90 min</span><span>Liber</span></div>
+      <div class="ring"><svg viewBox="0 0 290 290"><circle cx="145" cy="145" r="130" fill="none" stroke="#211e1a" stroke-width="14"/>
+        <circle id="arc" cx="145" cy="145" r="130" fill="none" stroke="#efe8da" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="0"/></svg>
+        <div class="n"><b id="tm">90:00</b><small>telefonul tace</small></div></div>
+      <div class="mini" id="mini">${'<i></i>'.repeat(12)}</div>
+      <div class="status" id="st">notificări oprite · <b>6 aplicații în pauză</b></div></div>`;
+    await wait(500);
+    const arc = $('#arc'), tm = $('#tm'), mini = [...document.querySelectorAll('#mini i')];
+    const total = 90 * 60; const steps = 60;
+    for (let k = 1; k <= steps; k++){
+      const left = Math.round(total * (1 - k / steps));
+      tm.textContent = `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
+      arc.setAttribute('stroke-dashoffset', (C * k / steps).toFixed(1));
+      const f = Math.floor(k / steps * 12); mini.forEach((m, i) => m.classList.toggle('f', i < f));
+      await wait(85);
+    }
+    tm.textContent = 'gata'; $('#st').innerHTML = 'sesiune încheiată · <b>+1 piesă în lanț</b>';
+    await wait(1600);
+  },
+
+  async streak(){
+    const n = 30, today = 12;
+    $('#root').innerHTML = `<div class="app">
+      <div class="top"><h1>Lanțul tău</h1>${logo}</div>
+      <div class="big"><b id="cnt">0</b><span>zile la rând</span></div>
+      <div class="rec">record: 19 zile · septembrie</div>
+      <div class="grid">${Array.from({length:n},(_,i)=>`<div class="d${i===today-1?' today':''}"><i></i><small>${i+1}</small></div>`).join('')}</div></div>`;
+    await wait(500);
+    const ds = [...document.querySelectorAll('.d')], cnt = $('#cnt');
+    for (let i = 0; i < today; i++){ ds[i].classList.add('done'); cnt.textContent = i + 1; await wait(i < today - 1 ? 150 : 0); }
+    await wait(2900);
+  }
+};
+window.__done = false;
+scenes[clip]().then(() => { window.__done = true; });
+</script>
+</body>
+</html>
