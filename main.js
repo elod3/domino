@@ -166,12 +166,12 @@ document.documentElement.classList.remove('no-js');
 
   // Benzile fiecărei replici: [fadeIn, plinStart, plinEnd, fadeOut]
   const BANDS = {
-    q:  [0.015,0.05,0.10,0.13],
+    q:  [-0.02,0.00,0.09,0.12],
     s1: [0.25, 0.29,0.37,0.40],
     s2: [0.41, 0.45,0.52,0.55],
     s3: [0.56, 0.60,0.65,0.68],
     s4: [0.70, 0.74,0.81,0.84],
-    s5: [0.86, 0.90,0.99,1.01],
+    s5: [0.83, 0.87,0.99,1.01],
   };
 
   const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
@@ -192,8 +192,8 @@ document.documentElement.classList.remove('no-js');
   }
 
   function worldOpacity(p){
-    if(p < 0.14) return 0;
-    if(p < 0.18) return (p-0.14)/0.04;
+    if(p < 0.09) return 0;
+    if(p < 0.13) return (p-0.09)/0.04;
     if(p < 0.74) return 1;
     if(p < 0.84) return 1-(p-0.74)/0.10;
     return 0;
