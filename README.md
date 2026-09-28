@@ -43,7 +43,7 @@ index.html            pagina
 assets/site.css       stilul
 assets/site.js        lanțul, telefonul, limba RO/EN (textele EN sunt în site.js)
 assets/fonts.css      fonturile locale
-assets/media/         lant.mp4 (hero), clip-*.mp4 (telefon), pozele lui Elod
+assets/media/         lant.mp4 (hero), clip-*.mp4 (telefon)
 assets/img/           logo, favicon, og.jpg
 tools/clips/          ecranele din clipuri + record.js (Playwright + ffmpeg)
 ```
