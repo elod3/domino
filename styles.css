@@ -170,7 +170,7 @@ header.nav{
 /* ---- CINEMA (secvență cu scroll: efectul domino) ----
    Ecran negru: acoperă clipul din hero. Obiectele „sar" în față
    pe rând, iar ilustrația cu dominouri se rotește prin zoom/pan. */
-.cinema{position:relative;z-index:3;background:#000;height:640vh}
+.cinema{position:relative;z-index:3;background:#000;height:460vh}
 .cinema__stage{
   position:sticky;top:0;height:100vh;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
@@ -191,8 +191,10 @@ header.nav{
 }
 .cine-line .accent{color:var(--accent)}
 .cine-line--caption{
-  top:78%;width:min(92vw,1120px);
+  top:80%;width:max-content;max-width:min(92vw,1120px);
   font-size:clamp(22px,3.4vw,44px);line-height:1.18;
+  padding:.35em .8em;border-radius:18px;
+  background:rgba(8,6,14,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
 
 /* În timpul „cinema", bara de sus și săgeata dispar (ecran gol) */

@@ -199,11 +199,22 @@ document.documentElement.classList.remove('no-js');
     return 0;
   }
 
-  let ticking = false;
-  function render(){
+  // Progresul afișat „alunecă” spre cel real, ca scroll-ul cu rotița să nu sară în trepte
+  let shown = null, raf = 0;
+  function target(){
+    const range = cinema.offsetHeight - window.innerHeight;
+    return clamp((window.scrollY - cinema.offsetTop) / (range || 1), 0, 1);
+  }
+  function tick(){
+    const t = target();
+    shown = shown === null ? t : shown + (t - shown) * 0.09;
+    if(Math.abs(t - shown) < 0.0004) shown = t;
+    render(shown);
+    raf = shown === t ? 0 : requestAnimationFrame(tick);
+  }
+  function render(p){
     const rangeTop = cinema.offsetTop;
     const range = cinema.offsetHeight - window.innerHeight;
-    const p = clamp((window.scrollY - rangeTop) / (range || 1), 0, 1);
 
     // ecran negru + navbar ascunsă cât timp suntem în secvență
     const active = window.scrollY > rangeTop - 2 &&
@@ -228,10 +239,9 @@ document.documentElement.classList.remove('no-js');
       el.style.opacity = op.toFixed(3);
       el.style.transform = `translate(-50%, calc(-50% + ${y.toFixed(1)}px)) scale(${s.toFixed(3)})`;
     }
-    ticking = false;
   }
-  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(render); } }
+  function onScroll(){ if(!raf) raf = requestAnimationFrame(tick); }
   window.addEventListener('scroll', onScroll, { passive:true });
   window.addEventListener('resize', onScroll);
-  render();
+  tick();
 })();
